@@ -61,7 +61,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
     @Override
     public List<Item> getItemsByUser(Integer userId) {
         List<Item> itemsForOwner = new ArrayList<>();
-        itemsForOwner = items.values().stream().filter(item -> item.getOwner().getId() == userId).collect(Collectors.toList());
+        itemsForOwner = items.values().stream().filter(item -> item.getOwner().getId().equals(userId)).collect(Collectors.toList());
         log.info("Найдены все вещи пользователя с id:" + userId);
         return itemsForOwner;
     }
@@ -95,7 +95,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
     }
 
     private Boolean checkUserId(Integer itemId, Integer userId) {
-        if (items.get(itemId).getOwner().getId() == userId) {
+        if (items.get(itemId).getOwner().getId().equals(userId)) {
             return true;
         } else {
             throw new RequestError(HttpStatus.NOT_FOUND, "Редактировать вещь может только её владелец");
