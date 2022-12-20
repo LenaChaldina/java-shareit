@@ -25,6 +25,7 @@ public class UserController {
         User user = UserMapper.dtoToUser(userDto);
         return userService.addUser(user);
     }
+
     @PatchMapping("/{id}")
     public UserDto putUser(@PathVariable("id") int userId, @RequestBody UserDto userDto) {
         User user = UserMapper.dtoToUser(userDto);
