@@ -16,18 +16,17 @@ import java.util.stream.Collectors;
 @Service
 public class UserRepositoryInMemory implements UserRepository {
     private Map<Long, User> users = new HashMap<>();
-    private Long id = 1l;
+    private Long id = 1L;
 
     @Override
     public User addUser(User user) {
-        if (checkEmailDuplicate(user)) {
-            user.setId(id++);
-            users.put(user.getId(), user);
-            log.info("Добавлен пользователь с id:" + user.getId());
-            return user;
-        } else {
+        if (!checkEmailDuplicate(user)) {
             throw new RequestError(HttpStatus.CONFLICT, "Юзер с такой почтой уже создан");
         }
+        user.setId(id++);
+        users.put(user.getId(), user);
+        log.info("Добавлен пользователь с id:" + user.getId());
+        return user;
     }
 
     @Override

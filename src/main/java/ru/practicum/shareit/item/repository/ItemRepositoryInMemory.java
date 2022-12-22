@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class ItemRepositoryInMemory implements ItemRepository {
     private Map<Long, Item> items = new HashMap<>();
-    private Long id = 1l;
+    private Long id = 1L;
 
     @Override
     public Item addNewItem(User user, Item item) {
