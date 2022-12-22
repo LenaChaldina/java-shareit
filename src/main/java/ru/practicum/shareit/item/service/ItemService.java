@@ -9,11 +9,11 @@ import java.util.List;
 public interface ItemService {
     ItemDto addNewItem(UserDto userDto, ItemDto itemDto);
 
-    ItemDto putItem(Integer itemId, ItemDto itemDto, Integer userId);
+    ItemDto putItem(Long itemId, ItemDto itemDto, Long userId);
 
-    Item getItemById(Integer itemId, Integer userId);
+    Item getItemById(Long itemId, Long userId);
 
-    List<Item> getItemsByUser(Integer userId);
+    List<Item> getItemsByUser(Long userId);
 
-    List<Item> getAvailableItems(Integer userId, String text);
+    List<Item> getAvailableItems(Long userId, String text);
 }

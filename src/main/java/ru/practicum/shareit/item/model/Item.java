@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Item {
-    Integer id;
+    Long id;
     @NotBlank(message = "Имя не может быть пустым")
     String name;
     @NotEmpty(message = "Описание не может быть пустым")
@@ -28,9 +28,10 @@ public class Item {
     //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
     ItemRequest request;
 
-    public Item(String name, String description, Boolean available) {
+    public Item(String name, String description, Boolean available, ItemRequest request) {
         this.name = name;
         this.description = description;
         this.available = available;
+        this.request = request;
     }
 }

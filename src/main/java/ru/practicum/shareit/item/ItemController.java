@@ -20,7 +20,7 @@ public class ItemController {
 
     //Добавление новой вещи
     @PostMapping
-    public ItemDto add(@RequestHeader("X-Sharer-User-Id") Integer userId,
+    public ItemDto add(@RequestHeader("X-Sharer-User-Id") Long userId,
                        @Valid @RequestBody ItemDto itemDto) {
         UserDto userDto = userService.findUserById(userId);
         return itemService.addNewItem(userDto, itemDto);
@@ -28,21 +28,21 @@ public class ItemController {
 
     //Редактирование вещи
     @PatchMapping("/{itemId}")
-    public ItemDto putItem(@PathVariable("itemId") Integer itemId, @RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public ItemDto putItem(@PathVariable("itemId") Long itemId, @RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.putItem(itemId, itemDto, userId);
     }
 
     //Просмотр информации о конкретной вещи по её идентификатору.
     //Эндпойнт GET /items/{itemId}. Информацию о вещи может просмотреть любой пользователь.
     @GetMapping("/{itemId}")
-    public Item getItemById(@PathVariable("itemId") Integer itemId, @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public Item getItemById(@PathVariable("itemId") Long itemId, @RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.getItemById(itemId, userId);
     }
 
     //Просмотр владельцем списка всех его вещей с указанием названия и описания для каждой.
     //Эндпойнт GET /items.
     @GetMapping
-    public List<Item> getItemsByUser(@RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public List<Item> getItemsByUser(@RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.getItemsByUser(userId);
     }
 
@@ -51,7 +51,7 @@ public class ItemController {
     // Происходит по эндпойнту /items/search?text={text}, в text передаётся текст для поиска.
     // Проверьте, что поиск возвращает только доступные для аренды вещи.
     @GetMapping("/search")
-    public List<Item> getAvailableItems(@RequestHeader("X-Sharer-User-Id") Integer userId, @RequestParam String text) {
+    public List<Item> getAvailableItems(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestParam String text) {
         return itemService.getAvailableItems(userId, text);
     }
 }

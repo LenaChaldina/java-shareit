@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ItemRepositoryInMemory implements ItemRepository {
-    private Map<Integer, Item> items = new HashMap<>();
-    private int id = 1;
+    private Map<Long, Item> items = new HashMap<>();
+    private Long id = 1l;
 
     @Override
     public Item addNewItem(User user, Item item) {
@@ -32,7 +32,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
     // Изменить можно название, описание и статус доступа к аренде.
     // Редактировать вещь может только её владелец.
     @Override
-    public Item putItem(Integer itemId, Item item, Integer userId) {
+    public Item putItem(Long itemId, Item item, Long userId) {
         checkItemId(itemId);
         checkUserId(itemId, userId);
         if (item.getName() != null) {
@@ -51,7 +51,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
     //Просмотр информации о конкретной вещи по её идентификатору.
     //Информацию о вещи может просмотреть любой пользователь.
     @Override
-    public Item getItemById(Integer itemId, Integer userId) {
+    public Item getItemById(Long itemId, Long userId) {
         checkItemId(itemId);
         log.info("Вещь с ID:" + itemId + " успешно найдена");
         return items.get(itemId);
@@ -59,7 +59,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
 
     //Просмотр владельцем списка всех его вещей с указанием названия и описания для каждой.
     @Override
-    public List<Item> getItemsByUser(Integer userId) {
+    public List<Item> getItemsByUser(Long userId) {
         List<Item> itemsForOwner = new ArrayList<>();
         itemsForOwner = items.values().stream().filter(item -> item.getOwner().getId().equals(userId)).collect(Collectors.toList());
         log.info("Найдены все вещи пользователя с id:" + userId);
@@ -72,7 +72,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
     //Происходит по эндпойнту /items/search?text={text}, в text передаётся текст для поиска.
     //Проверьте, что поиск возвращает только доступные для аренды вещи.
     @Override
-    public List<Item> getAvailableItems(Integer userId, String text) {
+    public List<Item> getAvailableItems(Long userId, String text) {
         String textToLower = text.toLowerCase();
         List<Item> itemsForUser = new ArrayList<>();
         if (!text.isBlank()) {
@@ -86,7 +86,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
         return itemsForUser;
     }
 
-    private Boolean checkItemId(Integer itemId) {
+    private Boolean checkItemId(Long itemId) {
         if (items.containsKey(itemId)) {
             return true;
         } else {
@@ -94,7 +94,7 @@ public class ItemRepositoryInMemory implements ItemRepository {
         }
     }
 
-    private Boolean checkUserId(Integer itemId, Integer userId) {
+    private Boolean checkUserId(Long itemId, Long userId) {
         if (items.get(itemId).getOwner().getId().equals(userId)) {
             return true;
         } else {

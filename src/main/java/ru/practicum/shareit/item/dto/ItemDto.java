@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
-    Integer id;
+    Long id;
     @NotBlank(message = "Имя не может быть пустым")
     String name;
     @NotEmpty(message = "Описание не может быть пустым")
@@ -26,12 +26,13 @@ public class ItemDto {
     //владелец вещи
     User owner;
     //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
-    ItemRequest request;
+    Long requestId;
 
-    public ItemDto(Integer id, String name, String description, Boolean available) {
+    public ItemDto(Long id, String name, String description, Boolean available, Long requestId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
+        this.requestId = requestId;
     }
 }

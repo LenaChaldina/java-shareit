@@ -15,13 +15,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class UserRepositoryInMemory implements UserRepository {
-    private Map<Integer, User> users = new HashMap<>();
-
-    public Map<Integer, User> getUsersForMapping() {
-        return users;
-    }
-
-    private int id = 1;
+    private Map<Long, User> users = new HashMap<>();
+    private Long id = 1l;
 
     @Override
     public User addUser(User user) {
@@ -36,7 +31,7 @@ public class UserRepositoryInMemory implements UserRepository {
     }
 
     @Override
-    public User putUser(User user, int userId) {
+    public User putUser(User user, Long userId) {
         //должна быть возможность земенить не только всего юзера но и почту либо имя у существующего
         if (users.containsKey(userId)) {
             if (checkEmailDuplicate(user)) {
@@ -68,7 +63,7 @@ public class UserRepositoryInMemory implements UserRepository {
     }
 
     @Override
-    public User findUserById(int id) {
+    public User findUserById(Long id) {
         if (users.containsKey(id)) {
             return users.get(id);
         } else {
@@ -77,7 +72,7 @@ public class UserRepositoryInMemory implements UserRepository {
     }
 
     @Override
-    public void deleteUser(int id) {
+    public void deleteUser(Long id) {
         if (users.containsKey(id)) {
             users.remove(id);
             log.info("Удален пользователь с id:" + id);

@@ -8,11 +8,11 @@ import java.util.List;
 public interface ItemRepository {
     Item addNewItem(User user, Item item);
 
-    Item putItem(Integer itemId, Item item, Integer userId);
+    Item putItem(Long itemId, Item item, Long userId);
 
-    Item getItemById(Integer itemId, Integer userId);
+    Item getItemById(Long itemId, Long userId);
 
-    List<Item> getItemsByUser(Integer userId);
+    List<Item> getItemsByUser(Long userId);
 
-    List<Item> getAvailableItems(Integer userId, String text);
+    List<Item> getAvailableItems(Long userId, String text);
 }

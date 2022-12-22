@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto putUser(User user, int userId) {
+    public UserDto putUser(User user, Long userId) {
         return UserMapper.toUserDto(userRepositoryInMemory.putUser(user, userId));
     }
 
@@ -36,12 +36,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findUserById(int id) {
+    public UserDto findUserById(Long id) {
         return UserMapper.toUserDto(userRepositoryInMemory.findUserById(id));
     }
 
     @Override
-    public void deleteUser(int id) {
+    public void deleteUser(Long id) {
         userRepositoryInMemory.deleteUser(id);
     }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequest {
-    final Integer id;
+    final Long id;
     //текст запроса, содержащий описание требуемой вещи
     final String description;
     //пользователь, создавший запрос

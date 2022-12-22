@@ -25,23 +25,23 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto putItem(Integer itemId, ItemDto itemDto, Integer userId) {
+    public ItemDto putItem(Long itemId, ItemDto itemDto, Long userId) {
         Item item = ItemMapper.dtoToItem(itemDto);
         return ItemMapper.toItemDto(itemRepositoryInMemory.putItem(itemId, item, userId));
     }
 
     @Override
-    public Item getItemById(Integer itemId, Integer userId) {
+    public Item getItemById(Long itemId, Long userId) {
         return itemRepositoryInMemory.getItemById(itemId, userId);
     }
 
     @Override
-    public List<Item> getItemsByUser(Integer userId) {
+    public List<Item> getItemsByUser(Long userId) {
         return itemRepositoryInMemory.getItemsByUser(userId);
     }
 
     @Override
-    public List<Item> getAvailableItems(Integer userId, String text) {
+    public List<Item> getAvailableItems(Long userId, String text) {
         return itemRepositoryInMemory.getAvailableItems(userId, text);
     }
 }

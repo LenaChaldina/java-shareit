@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Booking {
-    Integer id;
+    Long id;
     //дата и время начала бронирования;
     final LocalDateTime start;
     //дата и время конца бронирования
