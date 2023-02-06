@@ -1,27 +1,20 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.item.dto;
 
 import jdk.jfr.BooleanFlag;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.request.ItemRequest;
+import org.springframework.data.annotation.Transient;
+import ru.practicum.shareit.booking.dto.BookingSmallDto;
 import ru.practicum.shareit.user.model.User;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "items", schema = "public")
-public class Item {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
+public class ItemDtoForBooking {
     Long id;
     @NotBlank(message = "Имя не может быть пустым")
     String name;
@@ -32,27 +25,19 @@ public class Item {
     @NotNull
     Boolean available;
     //владелец вещи
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="user_id")
+    @Transient
     User owner;
     //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
-    @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="request_id")
-    ItemRequest request;
+    Long requestId;
+    private BookingSmallDto lastBooking;
+    private BookingSmallDto nextBooking;
 
-    @OneToMany()
-    @JoinColumn(name="item_id")
-    List<Booking> bookings;
 
-    public Item(Long id, String name, String description, Boolean available, User owner, ItemRequest request) {
+    public ItemDtoForBooking(Long id, String name, String description, Boolean available, Long requestId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
-        this.owner = owner;
-        this.request = request;
-    }
-    public Item() {
-
+        this.requestId = requestId;
     }
 }

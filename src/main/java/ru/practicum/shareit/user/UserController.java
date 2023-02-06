@@ -27,9 +27,9 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserDto putUser(@PathVariable("id") Long userId, @RequestBody UserDto userDto) {
+    public UserDto patchUser(@PathVariable("id") Long userId, @RequestBody UserDto userDto) {
         User user = UserMapper.dtoToUser(userDto);
-        return userService.putUser(user, userId);
+        return userService.patchUser(user, userId);
     }
 
     @GetMapping
