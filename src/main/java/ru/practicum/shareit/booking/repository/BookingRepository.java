@@ -3,10 +3,8 @@ package ru.practicum.shareit.booking.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import ru.practicum.shareit.booking.dto.BookingSmallDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.enums.Status;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
@@ -65,4 +63,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
             "where i.owner.id = ?1 and b.status <> 'REJECTED' " +
             "order by b.start asc")
     List<Booking> getBookingsByOwner(Long ownerId);
+
+    @Query("select b from Booking b where b.item.id = ?1 order by b.start asc")
+    List<Booking> getBookingsByItemOrderByStartAsc(Long itemId);
+
+    @Query("select b from Booking b where b.booker.id = ?1 and b.item.id = ?2")
+    List<Booking> getBookingsByBookerIdAndItem(Long userId, Long itemId);
 }

@@ -6,11 +6,15 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Transient;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -32,6 +36,7 @@ public class ItemDtoForBooking {
     private BookingSmallDto lastBooking;
     private BookingSmallDto nextBooking;
 
+    List<CommentResponseDto> comments;
 
     public ItemDtoForBooking(Long id, String name, String description, Boolean available, Long requestId) {
         this.id = id;

@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.dto;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
 import ru.practicum.shareit.item.model.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -19,7 +20,7 @@ public class ItemMapper {
         );
     }
 
-    public static ItemDtoForBooking toItemDtoForBooking(Item item, List<BookingSmallDto> bookings) {
+    public static ItemDtoForBooking toItemDtoForBooking(Item item, List<BookingSmallDto> bookings, List<CommentResponseDto> commentResponseList) {
         ItemDtoForBooking itemDtoForBooking = new ItemDtoForBooking(
                 item.getId(),
                 item.getName(),
@@ -36,6 +37,11 @@ public class ItemMapper {
                 itemDtoForBooking.setLastBooking(bookings.get(0));
                 itemDtoForBooking.setNextBooking(bookings.get(1));
             }
+        }
+        if ((commentResponseList != null) && (commentResponseList.size() != 0)) {
+            itemDtoForBooking.setComments(commentResponseList);
+        } else {
+            itemDtoForBooking.setComments(new ArrayList<CommentResponseDto>());
         }
         return itemDtoForBooking;
     }

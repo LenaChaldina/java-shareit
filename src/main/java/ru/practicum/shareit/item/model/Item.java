@@ -44,6 +44,11 @@ public class Item {
     @JoinColumn(name="item_id")
     List<Booking> bookings;
 
+    @OneToMany()
+    @JoinColumn(name="item_id")
+    List<Comment> comments;
+
+
     public Item(Long id, String name, String description, Boolean available, User owner, ItemRequest request) {
         this.id = id;
         this.name = name;

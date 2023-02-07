@@ -1,9 +1,11 @@
+/*delete from public.comments;
+ALTER SEQUENCE public.comments_comment_id_seq RESTART WITH 1;
 delete from public.bookings;
 ALTER SEQUENCE public.bookings_booking_id_seq RESTART WITH 1;
 delete from public.items;
 ALTER SEQUENCE public.items_item_id_seq RESTART WITH 1;
 delete from public.users;
-ALTER SEQUENCE public.users_user_id_seq RESTART WITH 1;
+ALTER SEQUENCE public.users_user_id_seq RESTART WITH 1;*/
 
 /*INSERT INTO public.users(user_id, email, name)
 VALUES (1, 'updateName@user.com', 'updateName');
