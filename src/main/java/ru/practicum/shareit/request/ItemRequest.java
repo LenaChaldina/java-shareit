@@ -20,13 +20,12 @@ public class ItemRequest {
     //текст запроса, содержащий описание требуемой вещи
     String description;
     //пользователь, создавший запрос
-    @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_ud")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_ud")
     User requester;
     //владелец вещи
     LocalDateTime created;
 
     public ItemRequest() {
-
     }
 }

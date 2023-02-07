@@ -32,20 +32,20 @@ public class Item {
     @NotNull
     Boolean available;
     //владелец вещи
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="user_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     User owner;
     //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
-    @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="request_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "request_id")
     ItemRequest request;
 
     @OneToMany()
-    @JoinColumn(name="item_id")
+    @JoinColumn(name = "item_id")
     List<Booking> bookings;
 
     @OneToMany()
-    @JoinColumn(name="item_id")
+    @JoinColumn(name = "item_id")
     List<Comment> comments;
 
 
@@ -57,7 +57,7 @@ public class Item {
         this.owner = owner;
         this.request = request;
     }
-    public Item() {
 
+    public Item() {
     }
 }

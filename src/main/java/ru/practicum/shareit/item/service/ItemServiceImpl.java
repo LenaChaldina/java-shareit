@@ -49,26 +49,26 @@ public class ItemServiceImpl implements ItemService {
         Item item = ItemMapper.dtoToItem(itemDto);
         checkItemId(itemId);
         checkUserId(itemId, userId);
-        Optional<Item> ItemFromDbe = itemRepository.findById(itemId);
+        Optional<Item> itemFromDbe = itemRepository.findById(itemId);
         if (item.getName() != null) {
-            ItemFromDbe.get().setName(item.getName());
+            itemFromDbe.get().setName(item.getName());
         }
         if (item.getDescription() != null) {
-            ItemFromDbe.get().setDescription(item.getDescription());
+            itemFromDbe.get().setDescription(item.getDescription());
         }
         if (item.getAvailable() != null) {
-            ItemFromDbe.get().setAvailable(item.getAvailable());
+            itemFromDbe.get().setAvailable(item.getAvailable());
         }
-        itemRepository.save(ItemFromDbe.get());
+        itemRepository.save(itemFromDbe.get());
         log.info("Вещь с ID:" + itemId + " обновлена пользователем с id:" + userId);
-        return ItemMapper.toItemDto(ItemFromDbe.get());
+        return ItemMapper.toItemDto(itemFromDbe.get());
     }
 
     public void checkItemsAvailability(Long itemId) {
         checkItemId(itemId);
-        Optional<Item> ItemFromDbe = itemRepository.findById(itemId);
-        if (!ItemFromDbe.get().getAvailable()) {
-            throw new RequestError(HttpStatus.BAD_REQUEST, "Вещь c id:" + ItemFromDbe.get().getId() + " недоступна");
+        Optional<Item> itemFromDbe = itemRepository.findById(itemId);
+        if (!itemFromDbe.get().getAvailable()) {
+            throw new RequestError(HttpStatus.BAD_REQUEST, "Вещь c id:" + itemFromDbe.get().getId() + " недоступна");
         }
     }
 
@@ -193,8 +193,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private Boolean checkUserId(Long itemId, Long userId) {
-        Optional<Item> ItemFromDbe = itemRepository.findById(itemId);
-        if (ItemFromDbe.get().getOwner().getId().equals(userId)) {
+        Optional<Item> itemFromDbe = itemRepository.findById(itemId);
+        if (itemFromDbe.get().getOwner().getId().equals(userId)) {
             return true;
         } else {
             throw new RequestError(HttpStatus.NOT_FOUND, "Редактировать вещь может только её владелец");
@@ -202,8 +202,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private Boolean checkItemId(Long itemId) {
-        Optional<Item> ItemFromDbe = itemRepository.findById(itemId);
-        if (ItemFromDbe.isPresent()) {
+        Optional<Item> itemFromDbe = itemRepository.findById(itemId);
+        if (itemFromDbe.isPresent()) {
             return true;
         } else {
             throw new RequestError(HttpStatus.NOT_FOUND, "Вещи c id:" + itemId + " нет в списке");

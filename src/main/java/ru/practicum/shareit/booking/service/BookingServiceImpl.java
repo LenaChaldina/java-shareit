@@ -148,6 +148,7 @@ public class BookingServiceImpl implements BookingService {
                 throw new RequestError(HttpStatus.BAD_REQUEST, "некорректный state");
         }
     }
+
     @Override
     public List<BookingSmallDto> getBookingsByItem(Long itemId) {
         return bookingRepository.getBookingsByItem(itemId)

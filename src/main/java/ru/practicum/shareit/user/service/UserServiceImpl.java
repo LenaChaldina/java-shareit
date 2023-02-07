@@ -34,17 +34,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto patchUser(User user, Long userId) {
         //должна быть возможность заменить не только всего юзера но и почту либо имя у существующего
-        Optional<User> UserFromDbe = userRepository.findById(userId);
-        if (UserFromDbe.isPresent()) {
+        Optional<User> userFromDbe = userRepository.findById(userId);
+        if (userFromDbe.isPresent()) {
             if (user.getName() != null) {
-                UserFromDbe.get().setName(user.getName());
+                userFromDbe.get().setName(user.getName());
             }
             if (user.getEmail() != null) {
-                UserFromDbe.get().setEmail(user.getEmail());
+                userFromDbe.get().setEmail(user.getEmail());
             }
-            userRepository.save(UserFromDbe.get());
+            userRepository.save(userFromDbe.get());
             log.info("Обновлен пользователь с id:" + userId);
-            return UserMapper.toUserDto(UserFromDbe.get());
+            return UserMapper.toUserDto(userFromDbe.get());
         } else {
             throw new RequestError(HttpStatus.NOT_FOUND, "Taкого юзера нет в списке");
         }
@@ -58,9 +58,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findUserById(Long id) {
-        Optional<User> UserFromDbe = userRepository.findById(id);
-        if (UserFromDbe.isPresent()) {
-            return UserMapper.toUserDto(UserFromDbe.get());
+        Optional<User> userFromDbe = userRepository.findById(id);
+        if (userFromDbe.isPresent()) {
+            return UserMapper.toUserDto(userFromDbe.get());
         } else {
             throw new RequestError(HttpStatus.NOT_FOUND, "Taкого юзера нет в списке");
         }

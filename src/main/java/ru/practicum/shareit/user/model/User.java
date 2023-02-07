@@ -30,10 +30,10 @@ public class User {
     @NotBlank(message = "Почта не может быть пустой")
     String email;
 
-    @OneToMany(mappedBy="booker")
+    @OneToMany(mappedBy = "booker")
     List<Booking> bookings;
 
-    @OneToMany(mappedBy="owner")
+    @OneToMany(mappedBy = "owner")
     List<Item> items;
 
     public User(String name, String email) {
@@ -48,6 +48,5 @@ public class User {
     }
 
     public User() {
-
     }
 }

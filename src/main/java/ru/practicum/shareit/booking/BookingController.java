@@ -50,6 +50,7 @@ public class BookingController {
     public BookingDto patch(@PathVariable("bookingId") Long bookingId, @RequestHeader("X-Sharer-User-Id") Long userId, @RequestParam Boolean approved) {
         return bookingService.patch(bookingId, userId, approved);
     }
+
     //Получение данных о конкретном бронировании (включая его статус).
     //Может быть выполнено либо автором бронирования, либо владельцем вещи,
     //к которой относится бронирование. Эндпоинт — GET /bookings/{bookingId}.
@@ -57,6 +58,7 @@ public class BookingController {
     public BookingDto getBookingById(@PathVariable("bookingId") Long bookingId, @RequestHeader("X-Sharer-User-Id") Long userId) {
         return bookingService.getBookingById(bookingId, userId);
     }
+
     //Получение списка всех бронирований текущего пользователя.
     //Эндпоинт — GET /bookings?state={state}. Параметр state необязательный и по умолчанию
     //равен ALL (англ. «все»). Также он может принимать значения CURRENT (англ. «текущие»),
@@ -69,6 +71,7 @@ public class BookingController {
         User user = UserMapper.dtoToUser(userDto);
         return bookingService.getBookingsByUserAndState(user, state);
     }
+
     //Получение списка бронирований для всех вещей текущего пользователя.
     //Эндпоинт — GET /bookings/owner?state={state}.
     //Этот запрос имеет смысл для владельца хотя бы одной вещи.
@@ -79,6 +82,7 @@ public class BookingController {
         User user = UserMapper.dtoToUser(userDto);
         return bookingService.getBookingsByOwnerAndState(user, state);
     }
+
     @ExceptionHandler(ConversionFailedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handle(ConversionException e) {
