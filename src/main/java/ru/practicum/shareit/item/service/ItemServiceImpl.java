@@ -64,29 +64,11 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.toItemDto(ItemFromDbe.get());
     }
 
-    private Boolean checkItemId(Long itemId) {
-        Optional<Item> ItemFromDbe = itemRepository.findById(itemId);
-        if (ItemFromDbe.isPresent()) {
-            return true;
-        } else {
-            throw new RequestError(HttpStatus.NOT_FOUND, "Вещи c id:" + itemId + " нет в списке");
-        }
-    }
-
     public void checkItemsAvailability(Long itemId) {
         checkItemId(itemId);
         Optional<Item> ItemFromDbe = itemRepository.findById(itemId);
         if (!ItemFromDbe.get().getAvailable()) {
             throw new RequestError(HttpStatus.BAD_REQUEST, "Вещь c id:" + ItemFromDbe.get().getId() + " недоступна");
-        }
-    }
-
-    private Boolean checkUserId(Long itemId, Long userId) {
-        Optional<Item> ItemFromDbe = itemRepository.findById(itemId);
-        if (ItemFromDbe.get().getOwner().getId().equals(userId)) {
-            return true;
-        } else {
-            throw new RequestError(HttpStatus.NOT_FOUND, "Редактировать вещь может только её владелец");
         }
     }
 
@@ -208,5 +190,23 @@ public class ItemServiceImpl implements ItemService {
         comment.setAuthorId(authorId);
         comment.setCreated(LocalDateTime.now());
         return commentRepository.save(comment);
+    }
+
+    private Boolean checkUserId(Long itemId, Long userId) {
+        Optional<Item> ItemFromDbe = itemRepository.findById(itemId);
+        if (ItemFromDbe.get().getOwner().getId().equals(userId)) {
+            return true;
+        } else {
+            throw new RequestError(HttpStatus.NOT_FOUND, "Редактировать вещь может только её владелец");
+        }
+    }
+
+    private Boolean checkItemId(Long itemId) {
+        Optional<Item> ItemFromDbe = itemRepository.findById(itemId);
+        if (ItemFromDbe.isPresent()) {
+            return true;
+        } else {
+            throw new RequestError(HttpStatus.NOT_FOUND, "Вещи c id:" + itemId + " нет в списке");
+        }
     }
 }

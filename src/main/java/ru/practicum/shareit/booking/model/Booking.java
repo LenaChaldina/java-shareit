@@ -3,7 +3,6 @@ package ru.practicum.shareit.booking.model;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import org.apache.el.stream.Optional;
 import ru.practicum.shareit.enums.Status;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -39,18 +38,6 @@ public class Booking {
     //статус бронирования
     @Enumerated(EnumType.STRING)
     Status status;
-
-    /*@JoinTable(
-            name = "items", schema = "public",
-
-            joinColumns = @JoinColumn(
-                    name = "booking_id"
-            ),foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT),
-
-            inverseJoinColumns = @JoinColumn(
-                    name = "user_id"
-            ),inverseForeignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
-    )*/
     @ManyToMany
     List<User> users = new ArrayList<>();
 

@@ -21,5 +21,4 @@ public class BookingDto {
     final Status status;
     final UserDto booker;
     final ItemDto item;
-
 }
