@@ -56,11 +56,10 @@ public class BookingServiceImpl implements BookingService {
             if (booking.get().getItem().getOwner().getId().equals(userId)) {
                 if (approved) {
                     booking.get().setStatus(Status.APPROVED);
-                    bookingRepository.save(booking.get());
                 } else {
                     booking.get().setStatus(Status.REJECTED);
-                    bookingRepository.save(booking.get());
                 }
+                bookingRepository.save(booking.get());
             } else {
                 throw new RequestError(HttpStatus.NOT_FOUND, "Пользователь не является владельцем вещи");
             }
@@ -152,14 +151,14 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingSmallDto> getBookingsByItem(Long itemId) {
         return bookingRepository.getBookingsByItem(itemId)
-                .stream().map(booking -> BookingMapper.toBookingSmallDto(booking))
+                .stream().map(BookingMapper::toBookingSmallDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<BookingSmallDto> getBookingsByOwner(UserDto userDto) {
         return bookingRepository.getBookingsByOwner(userDto.getId())
-        .stream().map(booking -> BookingMapper.toBookingSmallDto(booking))
+                .stream().map(BookingMapper::toBookingSmallDto)
                 .collect(Collectors.toList());
     }
 
