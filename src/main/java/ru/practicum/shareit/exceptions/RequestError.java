@@ -8,4 +8,12 @@ public class RequestError extends ResponseStatusException {
     public RequestError(HttpStatus status, String message) {
         super(status, message);
     }
+
+    public String getError() {
+        return "";
+    }
+
+    public String getDescription() {
+        return "";
+    }
 }

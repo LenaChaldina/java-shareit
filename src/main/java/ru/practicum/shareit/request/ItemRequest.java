@@ -5,16 +5,27 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "requests", schema = "public")
 public class ItemRequest {
-    final Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "request_id")
+    Long id;
     //текст запроса, содержащий описание требуемой вещи
-    final String description;
+    String description;
     //пользователь, создавший запрос
-    final User requester;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_ud")
+    User requester;
     //владелец вещи
-    final LocalDateTime created;
+    LocalDateTime created;
+
+    public ItemRequest() {
+    }
 }
