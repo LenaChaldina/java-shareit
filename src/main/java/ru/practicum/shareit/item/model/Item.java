@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -36,9 +36,7 @@ public class Item {
     @JoinColumn(name = "user_id")
     User owner;
     //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "request_id")
-    ItemRequest request;
+    Long requestId;
 
     @OneToMany()
     @JoinColumn(name = "item_id")
@@ -49,13 +47,13 @@ public class Item {
     List<Comment> comments;
 
 
-    public Item(Long id, String name, String description, Boolean available, User owner, ItemRequest request) {
+    public Item(Long id, String name, String description, Boolean available, User owner, Long requestId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
         this.owner = owner;
-        this.request = request;
+        this.requestId = requestId;
     }
 
     public Item() {

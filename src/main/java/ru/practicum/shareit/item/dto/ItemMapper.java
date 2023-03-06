@@ -16,7 +16,7 @@ public class ItemMapper {
                 item.getDescription(),
                 item.getAvailable(),
                 item.getOwner(),
-                item.getRequest() != null ? item.getRequest().getId() : null
+                item.getRequestId()
         );
     }
 
@@ -26,7 +26,7 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                item.getRequest() != null ? item.getRequest().getId() : null
+                item.getRequestId()
         );
         if ((bookings != null) && (bookings.size() >= 2)) {
             List<BookingSmallDto> bookingsOneItem = bookings.stream()
@@ -53,8 +53,7 @@ public class ItemMapper {
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
                 itemDto.getOwner(),
-                //изменить после реализации функционала request
-                null
+                itemDto.getRequestId()
         );
     }
 }
