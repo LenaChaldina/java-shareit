@@ -2,6 +2,8 @@ package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.RequestError;
@@ -15,6 +17,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -43,16 +46,48 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getUsersRequests(Long userId) {
-        return null;
+        if (userRepository.findById(userId).isPresent()) {
+            List<ItemRequest> requests = itemRequestRepository.findRequestsByUser(userId);
+            List<ItemRequestDto> requestDtos = requests.stream()
+                    .map(request -> ItemRequestMapper.toItemRequestDto(request))
+                    .collect(Collectors.toList());
+            return requestDtos;
+        } else {
+            throw new RequestError(HttpStatus.NOT_FOUND, "Пользователь с id" + userId + " не найден");
+        }
     }
 
+    //получить список запросов, созданных другими пользователями постранично
     @Override
-    public List<ItemRequestDto> getRequests(Long userId, Integer size, Integer from) {
-        return null;
+    public List<ItemRequestDto> getRequests(Long userId, PageRequest pageRequest) {
+        if (userRepository.findById(userId).isPresent()) {
+            Page<ItemRequest> pages = itemRequestRepository.findRequestsWithoutOwner(userId, pageRequest);
+            List<ItemRequest> requests = pages.getContent();
+            List<ItemRequestDto> requestDtos = requests.stream()
+                    .map(request -> ItemRequestMapper.toItemRequestDto(request))
+                    .collect(Collectors.toList());
+            return requestDtos;
+        } else {
+            throw new RequestError(HttpStatus.NOT_FOUND, "Пользователь с id" + userId + " не найден");
+        }
     }
 
     @Override
     public ItemRequestDto getRequestById(Long requestId, Long userId) {
-        return null;
+        if (userRepository.findById(userId).isPresent()) {
+            Optional<ItemRequest> itemRequestFromDb = itemRequestRepository.findById(requestId);
+            if (itemRequestFromDb.isPresent()) {
+                return ItemRequestMapper.toItemRequestDto(itemRequestFromDb.get());
+            } else {
+                throw new RequestError(HttpStatus.NOT_FOUND, "Запрос с id" + requestId + " не найден");
+            }
+        } else {
+            throw new RequestError(HttpStatus.NOT_FOUND, "Пользователь с id" + userId + " не найден");
+        }
+    }
+
+    @Override
+    public Optional<ItemRequest> findRequestById(Long requestId) {
+        return itemRequestRepository.findById(requestId);
     }
 }

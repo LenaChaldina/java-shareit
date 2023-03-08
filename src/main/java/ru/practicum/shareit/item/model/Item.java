@@ -36,7 +36,9 @@ public class Item {
     @JoinColumn(name = "user_id")
     User owner;
     //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
-    Long requestId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "request_id")
+    ItemRequest itemRequest;
 
     @OneToMany()
     @JoinColumn(name = "item_id")
@@ -46,14 +48,12 @@ public class Item {
     @JoinColumn(name = "item_id")
     List<Comment> comments;
 
-
-    public Item(Long id, String name, String description, Boolean available, User owner, Long requestId) {
+    public Item(Long id, String name, String description, Boolean available, User owner) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
         this.owner = owner;
-        this.requestId = requestId;
     }
 
     public Item() {

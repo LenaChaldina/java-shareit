@@ -29,16 +29,15 @@ public class ItemDtoForBooking {
     @Transient
     User owner;
     //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
-    Long requestId;
+    //Long requestId;
     private BookingSmallDto lastBooking;
     private BookingSmallDto nextBooking;
     List<CommentResponseDto> comments;
 
-    public ItemDtoForBooking(Long id, String name, String description, Boolean available, Long requestId) {
+    public ItemDtoForBooking(Long id, String name, String description, Boolean available) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
-        this.requestId = requestId;
     }
 }

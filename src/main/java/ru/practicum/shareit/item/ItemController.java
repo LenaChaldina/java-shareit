@@ -24,15 +24,15 @@ import java.util.Objects;
 public class ItemController {
     private final ItemService itemService;
     private final UserService userService;
-
     private final BookingService bookingService;
+
 
     //Добавление новой вещи
     @PostMapping
     public ItemDto add(@RequestHeader("X-Sharer-User-Id") Long userId,
                        @Valid @RequestBody ItemDto itemDto) {
         UserDto userDto = userService.findUserById(userId);
-        return itemService.addNewItem(userDto, itemDto);
+        return itemService.addNewItem(userDto, itemDto, itemDto.getRequestId());
     }
 
     //Комментарий можно добавить по эндпоинту POST /items/{itemId}/comment

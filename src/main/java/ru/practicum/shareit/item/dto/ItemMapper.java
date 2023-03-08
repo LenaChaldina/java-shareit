@@ -10,13 +10,18 @@ import java.util.stream.Collectors;
 
 public class ItemMapper {
     public static ItemDto toItemDto(Item item) {
+        Long itemRequestId;
+        if (item.getItemRequest() != null) {
+            itemRequestId = item.getItemRequest().getId();
+        } else {
+            itemRequestId = null;
+        }
         return new ItemDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                item.getOwner(),
-                item.getRequestId()
+                itemRequestId
         );
     }
 
@@ -25,8 +30,7 @@ public class ItemMapper {
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.getAvailable(),
-                item.getRequestId()
+                item.getAvailable()
         );
         if ((bookings != null) && (bookings.size() >= 2)) {
             List<BookingSmallDto> bookingsOneItem = bookings.stream()
@@ -52,8 +56,24 @@ public class ItemMapper {
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                itemDto.getOwner(),
-                itemDto.getRequestId()
+                itemDto.getOwner()
+        );
+    }
+
+    public static ItemDtoForRequest requestDtoToItem(Item item) {
+        Long itemRequestId;
+        if (item.getItemRequest() != null) {
+            itemRequestId = item.getItemRequest().getId();
+        } else {
+            itemRequestId = null;
+        }
+        return new ItemDtoForRequest(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                itemRequestId,
+                item.getOwner().getId()
         );
     }
 }

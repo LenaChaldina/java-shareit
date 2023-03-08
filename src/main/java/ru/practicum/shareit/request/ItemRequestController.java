@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -40,7 +41,7 @@ public class ItemRequestController {
             @RequestHeader("X-Sharer-User-Id") Long userId,
             @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
             @RequestParam(value = "from", defaultValue = "0", required = false) Integer from) {
-        return itemRequestService.getRequests(userId, size, from);
+        return itemRequestService.getRequests(userId, PageRequest.of(from, size));
     }
 
     // GET /requests/{requestId} — получить данные об одном конкретном запросе (любой пользователь)

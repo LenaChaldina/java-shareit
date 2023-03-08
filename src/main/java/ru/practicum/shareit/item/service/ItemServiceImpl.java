@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
@@ -13,6 +14,8 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -30,12 +33,19 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
+    private final ItemRequestService itemRequestService;
 
     @Override
-    public ItemDto addNewItem(UserDto userDto, ItemDto itemDto) {
+    public ItemDto addNewItem(UserDto userDto, ItemDto itemDto, Long requestId) {
         User user = UserMapper.dtoToUser(userDto);
         Item item = ItemMapper.dtoToItem(itemDto);
         item.setOwner(user);
+        if (requestId != null) {
+            Optional<ItemRequest> itemRequest = itemRequestService.findRequestById(requestId);
+            if (itemRequest.isPresent()) {
+                item.setItemRequest(itemRequest.get());
+            }
+        }
         itemRepository.save(item);
         log.info("Вещь с ID:" + item.getId() + " добавлена пользователем с id:" + user.getId());
         return ItemMapper.toItemDto(item);
