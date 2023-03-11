@@ -39,11 +39,9 @@ public class Item {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request_id")
     ItemRequest itemRequest;
-
     @OneToMany()
     @JoinColumn(name = "item_id")
     List<Booking> bookings;
-
     @OneToMany()
     @JoinColumn(name = "item_id")
     List<Comment> comments;

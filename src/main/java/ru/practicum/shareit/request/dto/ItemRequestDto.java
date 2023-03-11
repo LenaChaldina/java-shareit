@@ -32,5 +32,9 @@ public class ItemRequestDto {
     Long requesterId;
     LocalDateTime created;
     List<ItemDtoForRequest> items;
+
+    public ItemRequestDto(String description) {
+        this.description = description;
+    }
 }
 

@@ -31,11 +31,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         Optional<User> requester = userRepository.findById(userId);
         if (requester.isPresent()) {
             log.info("Пользователь с id" + userId + "успешно найден");
-            itemRequestDto.setCreated(LocalDateTime.now());
+            itemRequestDto.setCreated(LocalDateTime.now().withNano(0));
             ItemRequest itemRequest = ItemRequestMapper.toDtoItemRequest(itemRequestDto, requester.get());
             itemRequest.setRequester(requester.get());
             itemRequest = itemRequestRepository.save(itemRequest);
-            log.info("Пользователь с id" + userId + "успешно сохранен");
+            log.info("Запрос с id" + itemRequestDto.getRequesterId() + "успешно сохранен");
             itemRequestDto.setId(itemRequest.getId());
             itemRequestDto.setRequesterId(itemRequest.getRequester().getId());
             return itemRequestDto;

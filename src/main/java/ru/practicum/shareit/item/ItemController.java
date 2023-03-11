@@ -26,7 +26,6 @@ public class ItemController {
     private final UserService userService;
     private final BookingService bookingService;
 
-
     //Добавление новой вещи
     @PostMapping
     public ItemDto add(@RequestHeader("X-Sharer-User-Id") Long userId,

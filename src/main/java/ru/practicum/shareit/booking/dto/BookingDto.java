@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.dto;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Transient;
 import ru.practicum.shareit.enums.Status;
@@ -11,14 +12,24 @@ import ru.practicum.shareit.user.dto.UserDto;
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingDto {
-    final Long id;
+    Long id;
     @Transient
     Long itemId;
-    final LocalDateTime start;
-    final LocalDateTime end;
-    final Status status;
-    final UserDto booker;
-    final ItemDto item;
+    LocalDateTime start;
+    LocalDateTime end;
+    Status status;
+    UserDto booker;
+    ItemDto item;
+
+    public BookingDto(Long id, LocalDateTime start, LocalDateTime end, Status status, UserDto booker, ItemDto item) {
+        this.id = id;
+        this.start = start;
+        this.end = end;
+        this.status = status;
+        this.booker = booker;
+        this.item = item;
+    }
 }

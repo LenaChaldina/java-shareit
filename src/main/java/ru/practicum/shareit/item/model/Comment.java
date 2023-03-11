@@ -1,9 +1,6 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "comments", schema = "public")
 public class Comment {
