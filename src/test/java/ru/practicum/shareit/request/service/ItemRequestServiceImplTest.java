@@ -42,16 +42,17 @@ class ItemRequestServiceImplTest {
     List<ItemRequest> itemRequests = List.of();
     List<ItemDtoForRequest> itemDtoForRequests = List.of();
 
-    @Test
+   @Test
     void addNewItemRequest_valid() {
         ItemRequestDto itemRequestDtoInput = new ItemRequestDto(1L, "Хотел бы воспользоваться щёткой для обуви", null, null, null);
-        ItemRequestDto itemRequestDto = new ItemRequestDto(requestId, "Хотел бы воспользоваться щёткой для обуви", userId, LocalDateTime.now().withNano(0), null);
+        ItemRequestDto itemRequestDto = new ItemRequestDto(requestId, "Хотел бы воспользоваться щёткой для обуви", userId, LocalDateTime.now().withSecond(0).withNano(0), null);
         ItemRequest itemRequest = new ItemRequest(1L, "Хотел бы воспользоваться щёткой для обуви", userInput, LocalDateTime.now().withNano(0), items);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(userInput));
         when(itemRequestRepository.save(itemRequest)).thenReturn(itemRequest);
 
         ItemRequestDto actualItemRequestDto = itemRequestService.addNewItemRequest(userId, itemRequestDtoInput);
+        actualItemRequestDto.setCreated(LocalDateTime.now().withSecond(0).withNano(0));
 
         assertEquals(itemRequestDto, actualItemRequestDto);
         verify(itemRequestRepository).save(itemRequest);
