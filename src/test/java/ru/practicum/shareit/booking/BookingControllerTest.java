@@ -45,7 +45,6 @@ class BookingControllerTest {
     ItemDto itemDto = new ItemDto(itemId, "name", "desc", true, requestId);
     BookingDto bookingDto = new BookingDto(bookingId, LocalDateTime.now().withNano(0),
     LocalDateTime.now().withNano(0).plusDays(1), Status.WAITING, userDto, itemDto);
-    BookingDto bookingDtoExp = new BookingDto();
 
     @SneakyThrows
     @Test
@@ -61,6 +60,7 @@ class BookingControllerTest {
                 .getResponse()
                 .getContentAsString();
     }
+
     @SneakyThrows
     @Test
     void patch() {
