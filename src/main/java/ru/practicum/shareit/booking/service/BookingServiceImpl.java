@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -94,24 +95,30 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> getBookingsByUserAndState(User user, StatusDto statusDto, PageRequest pageRequest) {
         List<Booking> bookings = new ArrayList<>();
+        Page<Booking> bookingPage;
         LocalDateTime currentDate = LocalDateTime.now();
         switch (statusDto) {
             case ALL:
-                bookings = bookingRepository.findAllByBookerOrderByStartDesc(user, pageRequest);
+                bookingPage = bookingRepository.findAllByBookerOrderByStartDesc(user, pageRequest);
+                bookings = bookingPage.getContent();
                 return bookings.stream().map(booking -> BookingMapper.toBookingDto(booking)).collect(Collectors.toList());
             case CURRENT:
-                bookings = bookingRepository.findAllByBookerAndStartBeforeAndEndAfterOrderByStartDesc(user, currentDate, currentDate, pageRequest);
+                bookingPage = bookingRepository.findAllByBookerAndStartBeforeAndEndAfterOrderByStartDesc(user, currentDate, currentDate, pageRequest);
+                bookings = bookingPage.getContent();
                 return bookings.stream().map(booking -> BookingMapper.toBookingDto(booking)).collect(Collectors.toList());
             case PAST:
-                bookings = bookingRepository.findAllByBookerAndEndBeforeOrderByStartDesc(user, currentDate, pageRequest);
+                bookingPage = bookingRepository.findAllByBookerAndEndBeforeOrderByStartDesc(user, currentDate, pageRequest);
+                bookings = bookingPage.getContent();
                 return bookings.stream().map(booking -> BookingMapper.toBookingDto(booking)).collect(Collectors.toList());
             case FUTURE:
-                bookings = bookingRepository.findAllByBookerAndStartAfterOrderByStartDesc(user, currentDate, pageRequest);
+                bookingPage = bookingRepository.findAllByBookerAndStartAfterOrderByStartDesc(user, currentDate, pageRequest);
+                bookings = bookingPage.getContent();
                 return bookings.stream().map(booking -> BookingMapper.toBookingDto(booking)).collect(Collectors.toList());
             case WAITING:
             case REJECTED:
                 Status status = Status.valueOf(statusDto.toString());
-                bookings = bookingRepository.findAllByBookerAndStatusEquals(user, status, pageRequest);
+                bookingPage = bookingRepository.findAllByBookerAndStatusEquals(user, status, pageRequest);
+                bookings = bookingPage.getContent();
                 return bookings.stream().map(booking -> BookingMapper.toBookingDto(booking)).collect(Collectors.toList());
             default:
                 throw new RequestError(HttpStatus.BAD_REQUEST, "Некорректный параметр state");
@@ -125,23 +132,29 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> getBookingsByOwnerAndState(User user, StatusDto statusDto, PageRequest pageRequest) {
         List<Booking> bookings = new ArrayList<>();
+        Page<Booking> bookingPage;
         switch (statusDto) {
             case ALL:
-                bookings = bookingRepository.getBookingsByOwnerId(user.getId(), pageRequest);
+                bookingPage = bookingRepository.getBookingsByOwnerId(user.getId(), pageRequest);
+                bookings = bookingPage.getContent();
                 return bookings.stream().map(booking -> BookingMapper.toBookingDto(booking)).collect(Collectors.toList());
             case CURRENT:
-                bookings = bookingRepository.getCurrentBookingByOwnerId(user.getId(), pageRequest);
+                bookingPage = bookingRepository.getCurrentBookingByOwnerId(user.getId(), pageRequest);
+                bookings = bookingPage.getContent();
                 return bookings.stream().map(booking -> BookingMapper.toBookingDto(booking)).collect(Collectors.toList());
             case PAST:
-                bookings = bookingRepository.getPastBookingByOwnerId(user.getId(), pageRequest);
+                bookingPage = bookingRepository.getPastBookingByOwnerId(user.getId(), pageRequest);
+                bookings = bookingPage.getContent();
                 return bookings.stream().map(booking -> BookingMapper.toBookingDto(booking)).collect(Collectors.toList());
             case FUTURE:
-                bookings = bookingRepository.getFutureBookingByOwnerId(user.getId(), pageRequest);
+                bookingPage = bookingRepository.getFutureBookingByOwnerId(user.getId(), pageRequest);
+                bookings = bookingPage.getContent();
                 return bookings.stream().map(booking -> BookingMapper.toBookingDto(booking)).collect(Collectors.toList());
             case WAITING:
             case REJECTED:
                 Status status = Status.valueOf(statusDto.toString());
-                bookings = bookingRepository.getStateBookingByOwnerId(user.getId(), status, pageRequest);
+                bookingPage = bookingRepository.getStateBookingByOwnerId(user.getId(), status, pageRequest);
+                bookings = bookingPage.getContent();
                 return bookings.stream().map(booking -> BookingMapper.toBookingDto(booking)).collect(Collectors.toList());
             default:
                 throw new RequestError(HttpStatus.BAD_REQUEST, "некорректный state");

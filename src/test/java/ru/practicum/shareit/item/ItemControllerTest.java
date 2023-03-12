@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -19,10 +21,12 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,13 +50,16 @@ class ItemControllerTest {
     User user = new User(userId, "Lena", "chaldina.e@gmail.com");
     UserDto userDto = new UserDto(userId, "Lena", "chaldina.e@gmail.com");
     Item item = new Item(itemId, "name", "desc", true, user);
-    ItemDtoForBooking itemDtoForBooking = new ItemDtoForBooking(itemId, "name", "desc", true);
+    ItemDtoForBooking itemDtoForBooking = new ItemDtoForBooking(1L, "name", "desc", true);
+
+    BookingSmallDto last = new BookingSmallDto(1L, 1L, 1L);
+    BookingSmallDto next = new BookingSmallDto(2L, 1L, 1L);
+    List<CommentResponseDto> commentResponseDtos = List.of();
     ItemDto itemDto = new ItemDto(itemId, "name", "desc", true, requestId);
     List<ItemDto> itemDtos = List.of();
     Comment comment = new Comment(1L, "text", 1L, 1L, LocalDateTime.now().withNano(0));
     CommentResponseDto commentResponseDto = new CommentResponseDto(1L, "text", "name", LocalDateTime.now().withNano(0));
     BookingSmallDto bookingSmallDto = new BookingSmallDto(1L, 1L, 1L);
-    List<CommentResponseDto> commentResponseDtos = List.of();
     List<BookingSmallDto> bookingSmallDtos = List.of();
     List<ItemDtoForBooking> itemDtoForBookings = List.of();
 
@@ -103,10 +110,14 @@ class ItemControllerTest {
         assertEquals(objectMapper.writeValueAsString(itemDto), result);
     }
 
-    /*@SneakyThrows
+   /* @SneakyThrows
     @Test
     void getItemById() {
-        when(itemService.getItemById(itemId, user, bookingSmallDtos, commentResponseDtos)).thenReturn(itemDtoForBooking);
+        itemDtoForBooking.setOwner(user);
+        itemDtoForBooking.setLastBooking(last);
+        itemDtoForBooking.setNextBooking(next);
+        itemDtoForBooking.setComments(commentResponseDtos);
+        when(itemService.getItemById(any(), any(), any(), any())).thenReturn(itemDtoForBooking);
 
         mockMvc.perform(get("/items/{itemId}", itemId)
                         .header("X-Sharer-User-Id", userId))

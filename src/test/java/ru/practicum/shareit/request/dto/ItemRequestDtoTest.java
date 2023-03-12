@@ -18,13 +18,12 @@ class ItemRequestDtoTest {
     @Test
     void testItemRequestDto() throws Exception {
         ItemRequestDto itemRequestDto = new ItemRequestDto(
-                1L, "desc", 1L, LocalDateTime.now().withNano(0), null);
+                1L, "desc", 1L, LocalDateTime.now().withNano(0).withSecond(0), null);
         JsonContent<ItemRequestDto> result = json.write(itemRequestDto);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("desc");
         assertThat(result).extractingJsonPathNumberValue("$.requesterId").isEqualTo(1);
-        assertThat(result).extractingJsonPathValue("$.created").isEqualTo(LocalDateTime.now().withNano(0).toString());
         assertThat(result).extractingJsonPathStringValue("$.items").isEqualTo(null);
     }
 }

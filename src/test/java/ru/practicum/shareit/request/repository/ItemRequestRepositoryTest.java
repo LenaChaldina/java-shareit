@@ -20,8 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ItemRequestRepositoryTest {
-    Long userIdElena;
-    Long userIdDaria;
     Long requestIdByElena;
     Long requestIdByDaria;
     User userInputElena;
@@ -29,6 +27,10 @@ class ItemRequestRepositoryTest {
     ItemRequest itemRequestByElena;
     ItemRequest itemRequestByDaria;
     PageRequest pageRequest;
+    Long elenaId;
+    Long dariaId;
+    Long elenaRequestId;
+    Long dariaRequestId;
 
     @Autowired
     private UserRepository userRepository;
@@ -37,34 +39,36 @@ class ItemRequestRepositoryTest {
 
     @BeforeAll
     private void addItemRequest() {
-        userIdElena = 1L;
-        userIdDaria = 2L;
         requestIdByElena = 1L;
         requestIdByDaria = 2L;
-        userInputElena = new User(userIdElena, "Elena", "chaldina.e@gmail.com");
-        userInputDaria = new User(userIdDaria, "Daria", "vilkova.d@gmail.com");
+        userInputElena = new User("Elena", "chaldina.e@gmail.com");
+        userInputDaria = new User("Daria", "vilkova.d@gmail.com");
         itemRequestByElena = new ItemRequest(requestIdByElena, "desc", userInputElena, LocalDateTime.now().withNano(0), null);
         itemRequestByDaria = new ItemRequest(requestIdByDaria, "desc1", userInputDaria, LocalDateTime.now().withNano(0), null);
         pageRequest = PageRequest.of(0, 10);
 
         userRepository.save(userInputElena);
+        elenaId = userRepository.findAll().get(0).getId();
         userRepository.save(userInputDaria);
+        dariaId = userRepository.findAll().get(1).getId();
         itemRequestRepository.save(itemRequestByElena);
+        elenaRequestId = itemRequestRepository.findAll().get(0).getId();
         itemRequestRepository.save(itemRequestByDaria);
+        dariaRequestId = itemRequestRepository.findAll().get(1).getId();
     }
 
     @Test
     void findRequestsWithoutOwner() {
-        Page<ItemRequest> actualItemRequest = itemRequestRepository.findRequestsWithoutOwner(userIdElena, pageRequest);
+        Page<ItemRequest> actualItemRequest = itemRequestRepository.findRequestsWithoutOwner(elenaId, pageRequest);
         assertEquals(1, actualItemRequest.getContent().size());
-        assertEquals(userIdDaria, actualItemRequest.getContent().get(0).getId());
+        assertEquals(dariaRequestId, actualItemRequest.getContent().get(0).getId());
     }
 
     @Test
     void findRequestsByUser() {
-        List<ItemRequest> actualItemRequest = itemRequestRepository.findRequestsByUser(userIdElena);
+        List<ItemRequest> actualItemRequest = itemRequestRepository.findRequestsByUser(elenaId);
         assertEquals(1, actualItemRequest.size());
-        assertEquals(1, actualItemRequest.get(0).getId());
+        assertEquals(elenaRequestId, actualItemRequest.get(0).getId());
         assertEquals("desc", actualItemRequest.get(0).getDescription());
     }
 
