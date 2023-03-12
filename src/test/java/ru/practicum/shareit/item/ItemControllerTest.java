@@ -6,10 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
-import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -21,12 +19,10 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -109,20 +105,6 @@ class ItemControllerTest {
 
         assertEquals(objectMapper.writeValueAsString(itemDto), result);
     }
-
-   /* @SneakyThrows
-    @Test
-    void getItemById() {
-        itemDtoForBooking.setOwner(user);
-        itemDtoForBooking.setLastBooking(last);
-        itemDtoForBooking.setNextBooking(next);
-        itemDtoForBooking.setComments(commentResponseDtos);
-        when(itemService.getItemById(any(), any(), any(), any())).thenReturn(itemDtoForBooking);
-
-        mockMvc.perform(get("/items/{itemId}", itemId)
-                        .header("X-Sharer-User-Id", userId))
-                .andExpect(status().isOk());
-    }*/
 
     @SneakyThrows
     @Test
