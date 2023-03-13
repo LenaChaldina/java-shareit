@@ -34,10 +34,13 @@ class BookingRepositoryTest {
     PageRequest pageRequest = PageRequest.of(0, 10);
     User userInputElena = new User(userIdElena, "Elena", "chaldina.e@gmail.com");
     Item item = new Item(itemId, "name", "desc", true, userInputElena);
-    Booking booking = new Booking(LocalDateTime.now().withNano(0), LocalDateTime.now().withNano(0).plusDays(1),
+    Booking booking = new Booking(LocalDateTime.now().withNano(0), LocalDateTime.now().
+            withNano(0).plusDays(1),
             item, userInputElena, Status.WAITING, null);
-    Booking pastBooking = new Booking( LocalDateTime.now().minusDays(1), LocalDateTime.now().minusDays(2),
+
+    Booking pastBooking = new Booking(LocalDateTime.now().minusDays(1), LocalDateTime.now().minusDays(2),
             item, userInputElena, Status.WAITING, null);
+
     Booking futureBooking = new Booking(LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2),
             item, userInputElena, Status.WAITING, null);
 
