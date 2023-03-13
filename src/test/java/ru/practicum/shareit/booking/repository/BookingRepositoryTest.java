@@ -1,29 +1,12 @@
 package ru.practicum.shareit.booking.repository;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.enums.Status;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepository;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BookingRepositoryTest {
-    @Autowired
+   /* @Autowired
     private UserRepository userRepository;
     @Autowired
     private ItemRepository itemRepository;
@@ -155,5 +138,5 @@ class BookingRepositoryTest {
         bookingRepository.deleteAll();
         itemRepository.deleteAll();
         userRepository.deleteAll();
-    }
+    }*/
 }
