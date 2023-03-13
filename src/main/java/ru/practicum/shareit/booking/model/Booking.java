@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.model;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.enums.Status;
@@ -16,6 +17,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "bookings", schema = "public")
+@AllArgsConstructor
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,11 +30,11 @@ public class Booking {
     @Column(name = "end_booking")
     LocalDateTime end;
     //вещь, которую пользователь бронирует
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_id")
     Item item;
     //пользователь, который осуществляет бронирование
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     User booker;
     //статус бронирования
@@ -46,6 +48,15 @@ public class Booking {
         this.end = end;
         this.item = item;
         this.booker = booker;
+    }
+
+    public Booking(LocalDateTime start, LocalDateTime end, Item item, User booker, Status status, List<User> users) {
+        this.start = start;
+        this.end = end;
+        this.item = item;
+        this.booker = booker;
+        this.status = status;
+        this.users = users;
     }
 
     public Booking() {

@@ -11,5 +11,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select distinct u from User u where u.id in :currentIds")
     List<User> findByUserIds(@Param("currentIds") List<Long> userIds);
-
 }

@@ -11,14 +11,12 @@ import ru.practicum.shareit.user.model.User;
 import java.util.List;
 
 public interface ItemService {
-    ItemDto addNewItem(UserDto userDto, ItemDto itemDto);
+    ItemDto addNewItem(UserDto userDto, ItemDto itemDto, Long requestId);
 
     ItemDto putItem(Long itemId, ItemDto itemDto, Long userId);
 
-    //ItemDtoForBooking getItemById(Long itemId, User user, List<BookingSmallDto> bookingSmallDto);
     ItemDtoForBooking getItemById(Long itemId, User user, List<BookingSmallDto> bookingSmallDto, List<CommentResponseDto> commentsResponseDto);
 
-   // List<ItemDtoForBooking> getItemsByUser(UserDto userDto, List<BookingSmallDto> bookings);
     List<ItemDtoForBooking> getItemsByUser(UserDto userDto, List<BookingSmallDto> bookings, List<CommentResponseDto> commentsResponseDto);
 
     List<ItemDto> search(Long userId, String text);
@@ -30,5 +28,4 @@ public interface ItemService {
     CommentResponseDto createComment(Long userId, Long itemId, String text);
 
     List<CommentResponseDto> getCommentList(Long itemId);
-
 }

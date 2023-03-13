@@ -1,11 +1,8 @@
-/*delete from public.comments;
-ALTER SEQUENCE public.comments_comment_id_seq RESTART WITH 1;
-delete from public.bookings;
-ALTER SEQUENCE public.bookings_booking_id_seq RESTART WITH 1;
-delete from public.items;
-ALTER SEQUENCE public.items_item_id_seq RESTART WITH 1;
-delete from public.users;
-ALTER SEQUENCE public.users_user_id_seq RESTART WITH 1;*/
+DROP TABLE IF EXISTS public.requests CASCADE;
+DROP TABLE IF EXISTS public.comments CASCADE;
+DROP TABLE IF EXISTS public.bookings CASCADE;
+DROP TABLE IF EXISTS public.items CASCADE;
+DROP TABLE IF EXISTS public.users CASCADE;
 
 /*INSERT INTO public.users(user_id, email, name)
 VALUES (1, 'updateName@user.com', 'updateName');
