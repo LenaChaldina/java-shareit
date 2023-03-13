@@ -35,4 +35,11 @@ public class ItemRequest {
     LocalDateTime created;
     @OneToMany(mappedBy = "itemRequest")
     List<Item> items = new ArrayList<>();
+
+    public ItemRequest(String description, User requester, LocalDateTime created, List<Item> items) {
+        this.description = description;
+        this.requester = requester;
+        this.created = created;
+        this.items = items;
+    }
 }
