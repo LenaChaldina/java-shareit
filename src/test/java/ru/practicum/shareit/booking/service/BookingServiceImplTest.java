@@ -44,8 +44,8 @@ class BookingServiceImplTest {
 
     @AfterAll()
     void tearDown() {
-        String sql =
-                "DELETE FROM public.requests; \n" +
+       /* String sql =
+                        "DELETE FROM public.requests; \n" +
                         "ALTER SEQUENCE public.requests_request_id_seq RESTART WITH 1; \n" +
                         "DELETE FROM public.comments; \n" +
                         "ALTER SEQUENCE public.comments_comment_id_seq RESTART WITH 1; \n" +
@@ -55,7 +55,7 @@ class BookingServiceImplTest {
                         "ALTER SEQUENCE public.items_item_id_seq RESTART WITH 1; \n" +
                         "DELETE FROM public.users; \n" +
                         "ALTER SEQUENCE public.users_user_id_seq RESTART WITH 1; ";
-        jdbcTemplate.update(sql);
+        jdbcTemplate.update(sql);*/
     }
 
     @BeforeAll()
