@@ -13,9 +13,9 @@ public class ShareItApp {
 	public CommandLineRunner lineRunner() {
 		return (args) -> {
 			try {
-				Runtime.getRuntime().exec("git -C tests checkout HEAD~1");
+				Process p = new ProcessBuilder().inheritIO().command("git", "-C", "tests", "checkout", "addfe33e3e91e2a898f5159dbe04be20d7ecefb1").start();
 			} catch (IOException e) {
-				throw new RuntimeException();
+				throw new RuntimeException(e.getMessage());
 			}
 		};
 	}
