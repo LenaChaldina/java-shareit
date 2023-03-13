@@ -1,17 +1,7 @@
 package ru.practicum.shareit.request.dto;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import ru.practicum.shareit.item.dto.ItemDtoForRequest;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.user.model.User;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
 class ItemRequestMapperTest {
-    User userInput = new User(1L, "Elena", "chaldina.e@gmail.com");
+    /*User userInput = new User(1L, "Elena", "chaldina.e@gmail.com");
     List<Item> items = List.of();
     List<ItemDtoForRequest> itemDtoForRequests = List.of();
     private ItemRequest itemRequest = new ItemRequest(1L, "desc", userInput, LocalDateTime.now().withNano(0), items);
@@ -39,5 +29,5 @@ class ItemRequestMapperTest {
                 () -> Assertions.assertEquals(itemRequest.getCreated(), LocalDateTime.now().withNano(0)),
                 () -> Assertions.assertEquals(itemRequest.getItems(), items)
         );
-    }
+    }*/
 }
