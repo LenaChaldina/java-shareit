@@ -72,10 +72,10 @@ class BookingServiceImplTest {
 
     @Test
     void addNewBooking_correctCase() {
-        BookingDto expected = new BookingDto(2L, LocalDateTime.now().plusHours(1), LocalDateTime.now().plusDays(1),
+        BookingDto expected = new BookingDto(4L, LocalDateTime.now().plusHours(1), LocalDateTime.now().plusDays(1),
                 Status.WAITING, UserMapper.toUserDto(userDaria), ItemMapper.toItemDto(itemElena));
-
         BookingDto actual = bookingService.addNewBooking(UserMapper.toUserDto(userDaria), itemElena, expected);
+
 
         assertEquals(expected, actual);
     }
