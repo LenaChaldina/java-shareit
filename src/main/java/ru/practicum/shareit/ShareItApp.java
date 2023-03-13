@@ -10,11 +10,12 @@ import java.io.IOException;
 @SpringBootApplication
 public class ShareItApp {
 	@Bean
-	public CommandLineRunner сommandLineRunnerBean() {
+	public CommandLineRunner lineRunner() {
 		return (args) -> {
 			try {
 				Runtime.getRuntime().exec("git -C tests checkout HEAD~1");
 			} catch (IOException e) {
+				throw new RuntimeException();
 			}
 		};
 	}
