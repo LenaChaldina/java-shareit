@@ -30,11 +30,11 @@ public class Booking {
     @Column(name = "end_booking")
     LocalDateTime end;
     //вещь, которую пользователь бронирует
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_id")
     Item item;
     //пользователь, который осуществляет бронирование
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     User booker;
     //статус бронирования

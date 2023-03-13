@@ -7,16 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.enums.Status;
 import ru.practicum.shareit.exceptions.RequestError;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForBooking;
-import ru.practicum.shareit.item.dto.ItemDtoForRequest;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.request.service.ItemRequestService;
@@ -58,22 +58,23 @@ class ItemServiceImplTest {
     Item item = new Item(1L, "item", "desc", true, user);
     ItemRequest itemRequest = new ItemRequest(1L, "reqDesc", user,
             LocalDateTime.of(1992, 7, 7, 2, 30), null);
-    List<Item> items = List.of();
-    List<ItemRequestDto> itemRequestDtos = List.of();
-    List<ItemRequest> itemRequests = List.of();
-    List<ItemDtoForRequest> itemDtoForRequests = List.of();
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @AfterAll()
     void tearDown() {
-        String sql = "DROP TABLE IF EXISTS public.requests CASCADE;\n" +
-                "DROP TABLE IF EXISTS public.comments CASCADE;\n" +
-                "DROP TABLE IF EXISTS public.bookings CASCADE;\n" +
-                "DROP TABLE IF EXISTS public.items CASCADE;\n" +
-                "DROP TABLE IF EXISTS public.users CASCADE; ";
-        jdbcTemplate.update(sql);
+       /* String sql = "DELETE FROM public.requests; \n" +
+                "ALTER SEQUENCE public.requests_request_id_seq RESTART WITH 1; \n" +
+                "DELETE FROM public.comments; \n" +
+                "ALTER SEQUENCE public.comments_comment_id_seq RESTART WITH 1; \n" +
+                "DELETE FROM public.bookings; \n" +
+                "ALTER SEQUENCE public.bookings_booking_id_seq RESTART WITH 1; \n" +
+                "DELETE FROM public.items; \n" +
+                "ALTER SEQUENCE public.items_item_id_seq RESTART WITH 1; \n" +
+                "DELETE FROM public.users; \n" +
+                "ALTER SEQUENCE public.users_user_id_seq RESTART WITH 1; ";
+        jdbcTemplate.update(sql);*/
     }
 
     @Test
@@ -144,5 +145,52 @@ class ItemServiceImplTest {
     @Test
     void createComment_empty() {
         assertThrows(RequestError.class, () -> itemService.createComment(1L, 1L, ""));
+    }
+
+    @Test
+    void createComment_emptyUser() {
+        assertThrows(RequestError.class, () -> itemService.createComment(10L, 1L, "comment"));
+    }
+
+    @Test
+    void createComment_emptyItem() {
+        assertThrows(RequestError.class, () -> itemService.createComment(1L, 10L, "comment"));
+    }
+
+    @Test
+    void createComment_noBooker() {
+        assertThrows(RequestError.class, () -> itemService.createComment(1L, 1L, "comment"));
+    }
+
+    //пользователь не закончил аренду
+    @Test
+    void createComment_afterBooking() {
+        Booking bookingIncorrect = new Booking(LocalDateTime.now().minusMonths(1), LocalDateTime.now().plusMonths(1), item, user);
+        bookingRepository.save(bookingIncorrect);
+        assertThrows(RequestError.class, () -> itemService.createComment(1L, 1L, "comment"));
+    }
+
+    @Test
+    void createComment_ok() {
+        User userDaria = new User("Daria", "dar@gmail.com");
+        userRepository.save(userDaria);
+        Item dariaItem = new Item(2L, "item2", "descc", true, userDaria);
+        itemRepository.save(dariaItem);
+        Booking bookingCorrect = new Booking(LocalDateTime.now().minusMonths(1), LocalDateTime.now().minusSeconds(1), item, userDaria);
+        bookingCorrect.setStatus(Status.WAITING);
+        bookingRepository.save(bookingCorrect);
+        CommentResponseDto exp = new CommentResponseDto(1L, "commentNew", "Daria", LocalDateTime.now().withSecond(0).withNano(0));
+        CommentResponseDto actual = itemService.createComment(user.getId(), item.getId(), "commentNew");
+        actual.setCreated(LocalDateTime.now().withSecond(0).withNano(0));
+
+        assertEquals(exp, actual);
+    }
+
+    @Test
+    void getCommentList() {
+        List<CommentResponseDto> exp = List.of();
+        List<CommentResponseDto> actual = itemService.getCommentList(item.getId());
+
+        assertEquals(exp, actual);
     }
 }
