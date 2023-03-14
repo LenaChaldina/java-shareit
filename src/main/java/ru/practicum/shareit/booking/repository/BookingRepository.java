@@ -63,7 +63,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
 
     Booking findFirstByItem_IdAndStartIsAfterAndStatusOrderByStartAsc(Long itemId, LocalDateTime time, Status status);
 
-
     @Query("select b from Booking b left join Item i on b.item.id = i.id " +
             "where i.owner.id = ?1 and b.status <> 'REJECTED' " +
             "order by b.start asc")
