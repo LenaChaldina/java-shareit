@@ -4,9 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.enums.Status;
 import ru.practicum.shareit.exceptions.RequestError;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Comment;
@@ -33,6 +36,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRequestService itemRequestService;
+    private final BookingService bookingService;
 
     @Override
     public ItemDto addNewItem(UserDto userDto, ItemDto itemDto, Long requestId) {
@@ -88,7 +92,18 @@ public class ItemServiceImpl implements ItemService {
         checkItemId(itemId);
         Item item = itemRepository.findById(itemId).get();
         log.info("Вещь с ID:" + itemId + " успешно найдена");
-        return ItemMapper.toItemDtoForBooking(item, bookingSmallDto, commentsResponseDto);
+        Booking lastBooking = bookingRepository.findFirstByItem_IdAndStartIsBeforeAndStatusOrderByStartDesc(itemId, LocalDateTime.now(), Status.APPROVED);
+        Booking nextBooking = bookingRepository.findFirstByItem_IdAndStartIsAfterAndStatusOrderByStartAsc(itemId, LocalDateTime.now(), Status.APPROVED);
+        ItemDtoForBooking itemDtoForBooking = ItemMapper.toItemDtoForBooking(item, bookingSmallDto, commentsResponseDto);
+        if (item.getOwner().getId().equals(user.getId())) {
+            if (lastBooking != null) {
+                itemDtoForBooking.setLastBooking(BookingMapper.toBookingSmallDto(lastBooking));
+            }
+            if (nextBooking != null) {
+                itemDtoForBooking.setNextBooking(BookingMapper.toBookingSmallDto(nextBooking));
+            }
+        }
+        return itemDtoForBooking;
     }
 
     @Override

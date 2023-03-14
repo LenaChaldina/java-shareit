@@ -37,7 +37,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
 
     @Query("select b from Booking b " +
             "left join Item i on i.id = b.item.id where i.owner.id =?1 " +
-            "and b.start <= current_timestamp and b.end >= current_timestamp order by b.start desc")
+            "and b.start <= current_timestamp and b.end >= current_timestamp order by b.start asc")
     Page<Booking> getCurrentBookingByOwnerId(Long ownerId, PageRequest pageRequest);
 
     @Query("select b from Booking b left join Item i on b.item.id = i.id " +
@@ -55,9 +55,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
             "order by b.start desc")
     Page<Booking> getStateBookingByOwnerId(Long ownerId, Status status, PageRequest pageRequest);
 
-    @Query("select b from Booking b where b.item.id = ?1 " +
+    @Query("select b from Booking b where b.item.id = ?1 and b.start >= ?2 " +
             "order by b.start asc")
-    List<Booking> getBookingsByItem(Long itemId);
+    List<Booking> getBookingsByItem(Long itemId, LocalDateTime date);
+    Booking findFirstByItem_IdAndStartIsBeforeAndStatusOrderByStartDesc(Long itemId, LocalDateTime time, Status status);
+    Booking findFirstByItem_IdAndStartIsAfterAndStatusOrderByStartAsc(Long itemId, LocalDateTime time, Status status);
 
     @Query("select b from Booking b left join Item i on b.item.id = i.id " +
             "where i.owner.id = ?1 and b.status <> 'REJECTED' " +

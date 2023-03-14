@@ -163,7 +163,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingSmallDto> getBookingsByItem(Long itemId) {
-        return bookingRepository.getBookingsByItem(itemId)
+        return bookingRepository.getBookingsByItem(itemId, LocalDateTime.now().minusSeconds(5))
                 .stream().map(BookingMapper::toBookingSmallDto)
                 .collect(Collectors.toList());
     }
@@ -184,6 +184,9 @@ public class BookingServiceImpl implements BookingService {
         }
         if (start.isAfter(end)) {
             throw new RequestError(HttpStatus.BAD_REQUEST, "Дата старта позже даты окончания");
+        }
+        if (Objects.equals(start, end)) {
+            throw new RequestError(HttpStatus.BAD_REQUEST, "Дата старта не может быть равной дате окончания");
         }
     }
 }

@@ -9,6 +9,7 @@ import ru.practicum.shareit.enums.Status;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,7 +19,9 @@ public class BookingDto {
     Long id;
     @Transient
     Long itemId;
+    @NotNull
     LocalDateTime start;
+    @NotNull
     LocalDateTime end;
     Status status;
     UserDto booker;
