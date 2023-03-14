@@ -58,7 +58,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
     @Query("select b from Booking b where b.item.id = ?1 and b.start >= ?2 " +
             "order by b.start asc")
     List<Booking> getBookingsByItem(Long itemId, LocalDateTime date);
+
     Booking findFirstByItem_IdAndStartIsBeforeAndStatusOrderByStartDesc(Long itemId, LocalDateTime time, Status status);
+
     Booking findFirstByItem_IdAndStartIsAfterAndStatusOrderByStartAsc(Long itemId, LocalDateTime time, Status status);
 
     @Query("select b from Booking b left join Item i on b.item.id = i.id " +
