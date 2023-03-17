@@ -2,13 +2,13 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.enums.Status;
 import ru.practicum.shareit.exceptions.RequestError;
 import ru.practicum.shareit.item.dto.*;
@@ -36,7 +36,6 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRequestService itemRequestService;
-    private final BookingService bookingService;
 
     @Override
     public ItemDto addNewItem(UserDto userDto, ItemDto itemDto, Long requestId) {
@@ -88,13 +87,13 @@ public class ItemServiceImpl implements ItemService {
     //Просмотр информации о конкретной вещи по её идентификатору.
     //Информацию о вещи может просмотреть любой пользователь.
     @Override
-    public ItemDtoForBooking getItemById(Long itemId, User user, List<BookingSmallDto> bookingSmallDto, List<CommentResponseDto> commentsResponseDto) {
+    public ItemDtoForBooking getItemById(Long itemId, User user, List<CommentResponseDto> commentsResponseDto) {
         checkItemId(itemId);
         Item item = itemRepository.findById(itemId).get();
         log.info("Вещь с ID:" + itemId + " успешно найдена");
         Booking lastBooking = bookingRepository.findFirstByItem_IdAndStartIsBeforeAndStatusOrderByStartDesc(itemId, LocalDateTime.now(), Status.APPROVED);
         Booking nextBooking = bookingRepository.findFirstByItem_IdAndStartIsAfterAndStatusOrderByStartAsc(itemId, LocalDateTime.now(), Status.APPROVED);
-        ItemDtoForBooking itemDtoForBooking = ItemMapper.toItemDtoForBooking(item, bookingSmallDto, commentsResponseDto);
+        ItemDtoForBooking itemDtoForBooking = ItemMapper.toItemDtoForBooking(item, null, commentsResponseDto);
         if (item.getOwner().getId().equals(user.getId())) {
             if (lastBooking != null) {
                 itemDtoForBooking.setLastBooking(BookingMapper.toBookingSmallDto(lastBooking));
@@ -115,11 +114,12 @@ public class ItemServiceImpl implements ItemService {
 
     //Просмотр владельцем списка всех его вещей с указанием названия и описания для каждой.
     @Override
-    public List<ItemDtoForBooking> getItemsByUser(UserDto userDto, List<BookingSmallDto> bookings, List<CommentResponseDto> commentsResponseDto) {
+    public List<ItemDtoForBooking> getItemsByUser(UserDto userDto, List<BookingSmallDto> bookings, PageRequest pageRequest) {
         User user = UserMapper.dtoToUser(userDto);
         List<Item> itemsForOwner = new ArrayList<>();
-        itemsForOwner = itemRepository.findByOwnerOrderById(user);
+        itemsForOwner = itemRepository.findByOwnerOrderById(user, pageRequest);
         log.info("Найдены все вещи пользователя с id:" + user.getId());
+        List<CommentResponseDto> commentsResponseDto = null;
         return itemsForOwner
                 .stream()
                 .map(item -> ItemMapper.toItemDtoForBooking(item, bookings, commentsResponseDto))
@@ -132,7 +132,7 @@ public class ItemServiceImpl implements ItemService {
     //Происходит по эндпойнту /items/search?text={text}, в text передаётся текст для поиска.
     //Проверьте, что поиск возвращает только доступные для аренды вещи.
     @Override
-    public List<ItemDto> search(Long userId, String text) {
+    public List<ItemDto> search(Long userId, String text, PageRequest pageRequest) {
         if (text.isBlank()) {
             return new ArrayList<>();
         } else {

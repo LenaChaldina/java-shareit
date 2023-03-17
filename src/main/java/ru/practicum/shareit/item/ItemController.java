@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
 import ru.practicum.shareit.booking.service.BookingService;
@@ -15,6 +16,8 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,23 +61,20 @@ public class ItemController {
     public ItemDtoForBooking getItemById(@PathVariable("itemId") Long itemId, @RequestHeader("X-Sharer-User-Id") Long userId) {
         UserDto userDto = userService.findUserById(userId);
         User user = UserMapper.dtoToUser(userDto);
-        List<BookingSmallDto> bookingsSmallDto = null;
         List<CommentResponseDto> commentsResponseDto;
         commentsResponseDto = itemService.getCommentList(itemId);
-        if (Objects.equals(itemService.getItemByOwner(itemId).getOwner().getId(), (userId))) {
-            bookingsSmallDto = bookingService.getBookingsByItem(itemId);
-        }
-        return itemService.getItemById(itemId, user, bookingsSmallDto, commentsResponseDto);
+        return itemService.getItemById(itemId, user, commentsResponseDto);
     }
 
     //Просмотр владельцем списка всех его вещей с указанием названия и описания для каждой.
     //Эндпойнт GET /items.
     @GetMapping
-    public List<ItemDtoForBooking> getItemsByUser(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemDtoForBooking> getItemsByUser(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                  @Positive @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
+                                                  @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) Integer from) {
         UserDto userDto = userService.findUserById(userId);
         List<BookingSmallDto> bookings = bookingService.getBookingsByOwner(userDto);
-        List<CommentResponseDto> commentsResponseDto = null;
-        return itemService.getItemsByUser(userDto, bookings, null);
+        return itemService.getItemsByUser(userDto, bookings, PageRequest.of(from / size, size));
     }
 
     //Поиск вещи потенциальным арендатором. Пользователь передаёт в строке запроса текст,
@@ -82,7 +82,10 @@ public class ItemController {
     // Происходит по эндпойнту /items/search?text={text}, в text передаётся текст для поиска.
     // Проверьте, что поиск возвращает только доступные для аренды вещи.
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestParam String text) {
-        return itemService.search(userId, text);
+    public List<ItemDto> search(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                @RequestParam String text,
+                                @Positive @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
+                                @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) Integer from) {
+        return itemService.search(userId, text, PageRequest.of(from / size, size));
     }
 }

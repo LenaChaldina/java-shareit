@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.service;
 
+import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
 import ru.practicum.shareit.item.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -15,11 +16,11 @@ public interface ItemService {
 
     ItemDto putItem(Long itemId, ItemDto itemDto, Long userId);
 
-    ItemDtoForBooking getItemById(Long itemId, User user, List<BookingSmallDto> bookingSmallDto, List<CommentResponseDto> commentsResponseDto);
+    ItemDtoForBooking getItemById(Long itemId, User user, List<CommentResponseDto> commentsResponseDto);
 
-    List<ItemDtoForBooking> getItemsByUser(UserDto userDto, List<BookingSmallDto> bookings, List<CommentResponseDto> commentsResponseDto);
+    List<ItemDtoForBooking> getItemsByUser(UserDto userDto, List<BookingSmallDto> bookings, PageRequest pageRequest);
 
-    List<ItemDto> search(Long userId, String text);
+    List<ItemDto> search(Long userId, String text, PageRequest pageRequest);
 
     void checkItemsAvailability(Long id);
 
