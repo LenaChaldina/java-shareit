@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
@@ -70,6 +71,7 @@ class ItemServiceImplTest {
     private User userDima;
     Long userDimaId;
     private UserDto userDimaDto;
+    PageRequest pageRequest = PageRequest.of(0, 10);
 
     @BeforeAll
     void add() {
@@ -136,7 +138,7 @@ class ItemServiceImplTest {
         List<CommentResponseDto> commentResponseDtos = List.of();
         ItemDtoForBooking expItemDtoForBooking = new ItemDtoForBooking(itemByLenaId, "item", "desc", true);
         expItemDtoForBooking.setComments(commentResponseDtos);
-        ItemDtoForBooking actualItemDtoForBooking = itemService.getItemById(itemByLenaId, userLena, null, null);
+        ItemDtoForBooking actualItemDtoForBooking = itemService.getItemById(itemByLenaId, userLena, null);
         assertEquals(expItemDtoForBooking, actualItemDtoForBooking);
     }
 
@@ -150,14 +152,14 @@ class ItemServiceImplTest {
         List<ItemDtoForBooking> itemDtoForBookings = List.of();
         List<BookingSmallDto> bookings = List.of();
         List<CommentResponseDto> commentsResponseDto = List.of();
-        List<ItemDtoForBooking> actual = itemService.getItemsByUser(userDimaDto, bookings, commentsResponseDto);
+        List<ItemDtoForBooking> actual = itemService.getItemsByUser(userDimaDto, bookings, pageRequest);
         assertEquals(itemDtoForBookings, actual);
     }
 
     @Test
     void search_textIsBlank() {
         List<ItemDto> exp = new ArrayList<>();
-        List<ItemDto> actual = itemService.search(userLenaId, "");
+        List<ItemDto> actual = itemService.search(userLenaId, "", pageRequest);
 
         assertEquals(exp, actual);
     }
@@ -165,7 +167,7 @@ class ItemServiceImplTest {
     @Test
     void search_textIsNotBlank() {
         List<ItemDto> exp = List.of();
-        List<ItemDto> actual = itemService.search(userLenaId, "text");
+        List<ItemDto> actual = itemService.search(userLenaId, "text", pageRequest);
 
         assertEquals(exp, actual);
     }

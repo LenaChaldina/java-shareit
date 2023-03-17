@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingSmallDto;
 import ru.practicum.shareit.booking.service.BookingService;
@@ -58,7 +59,7 @@ class ItemControllerTest {
     BookingSmallDto bookingSmallDto = new BookingSmallDto(1L, 1L, 1L);
     List<BookingSmallDto> bookingSmallDtos = List.of();
     List<ItemDtoForBooking> itemDtoForBookings = List.of();
-
+    PageRequest pageRequest = PageRequest.of(0, 10);
 
     @SneakyThrows
     @Test
@@ -109,7 +110,7 @@ class ItemControllerTest {
     @SneakyThrows
     @Test
     void getItemsByUser() {
-        when(itemService.getItemsByUser(userDto, bookingSmallDtos, commentResponseDtos)).thenReturn(itemDtoForBookings);
+        when(itemService.getItemsByUser(userDto, bookingSmallDtos, pageRequest)).thenReturn(itemDtoForBookings);
 
         mockMvc.perform(get("/items", itemId, userId)
                         .header("X-Sharer-User-Id", userId))
@@ -119,13 +120,13 @@ class ItemControllerTest {
     @SneakyThrows
     @Test
     void search() {
-        when(itemService.search(userId, "")).thenReturn(itemDtos);
+        when(itemService.search(userId, "", pageRequest)).thenReturn(itemDtos);
 
         mockMvc.perform(get("/items/search")
                         .header("X-Sharer-User-Id", userId)
                         .param("text", ""))
                 .andExpect(status().isOk());
 
-        verify(itemService).search(userId, "");
+        verify(itemService).search(userId, "", pageRequest);
     }
 }
