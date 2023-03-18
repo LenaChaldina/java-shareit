@@ -3,7 +3,9 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionFailedException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.service.BookingService;
@@ -16,6 +18,8 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
+@Validated
 public class BookingController {
     private final BookingService bookingService;
     private final UserService userService;
@@ -66,10 +71,14 @@ public class BookingController {
     //REJECTED (англ. «отклонённые»).
     //Бронирования должны возвращаться отсортированными по дате от более новых к более старым.
     @GetMapping()
-    public List<BookingDto> getBookingsByUser(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestParam(required = false, defaultValue = "ALL") StatusDto state) {
+    public List<BookingDto> getBookingsByUser(
+            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @RequestParam(required = false, defaultValue = "ALL") StatusDto state,
+            @Positive @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
+            @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) Integer from) {
         UserDto userDto = userService.findUserById(userId);
         User user = UserMapper.dtoToUser(userDto);
-        return bookingService.getBookingsByUserAndState(user, state);
+        return bookingService.getBookingsByUserAndState(user, state, PageRequest.of(from / size, size));
     }
 
     //Получение списка бронирований для всех вещей текущего пользователя.
@@ -77,10 +86,14 @@ public class BookingController {
     //Этот запрос имеет смысл для владельца хотя бы одной вещи.
     //Работа параметра state аналогична его работе в предыдущем сценарии.
     @GetMapping("/owner")
-    public List<BookingDto> getBookingsByOwner(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestParam(required = false, defaultValue = "ALL") StatusDto state) {
+    public List<BookingDto> getBookingsByOwner(
+            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @RequestParam(required = false, defaultValue = "ALL") StatusDto state,
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
+            @RequestParam(value = "from", defaultValue = "0", required = false) Integer from) {
         UserDto userDto = userService.findUserById(userId);
         User user = UserMapper.dtoToUser(userDto);
-        return bookingService.getBookingsByOwnerAndState(user, state);
+        return bookingService.getBookingsByOwnerAndState(user, state, PageRequest.of(from, size));
     }
 
     @ExceptionHandler(ConversionFailedException.class)

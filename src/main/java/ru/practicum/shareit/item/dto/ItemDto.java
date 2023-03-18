@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.dto;
 import jdk.jfr.BooleanFlag;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Transient;
 import ru.practicum.shareit.booking.model.Booking;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
     Long id;
@@ -27,18 +29,22 @@ public class ItemDto {
     //владелец вещи
     @Transient
     User owner;
-    //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
     Long requestId;
     private Booking lastBooking;
     private Booking nextBooking;
 
-
-    public ItemDto(Long id, String name, String description, Boolean available, User owner, Long requestId) {
+    public ItemDto(Long id, String name, String description, Boolean available) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
-        //this.owner = owner;
+    }
+
+    public ItemDto(Long id, String name, String description, Boolean available, Long requestId) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.available = available;
         this.requestId = requestId;
     }
 }
