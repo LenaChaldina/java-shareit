@@ -27,13 +27,13 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> createComment(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                @PathVariable Long itemId, @RequestBody CommentDto comment) {
+                                                @PathVariable Long itemId, @RequestBody @Valid CommentDto comment) {
         return itemClient.createComment(userId, itemId, comment);
     }
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> putItem(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                          @RequestBody ItemDto itemDto,
+                                          @RequestBody @Valid ItemDto itemDto,
                                           @PathVariable Integer itemId) {
         return itemClient.putItem(userId, itemDto, itemId);
     }
