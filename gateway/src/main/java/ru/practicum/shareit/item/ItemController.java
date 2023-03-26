@@ -33,7 +33,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> putItem(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                          @RequestBody @Valid ItemDto itemDto,
+                                          @RequestBody ItemDto itemDto,
                                           @PathVariable Integer itemId) {
         return itemClient.putItem(userId, itemDto, itemId);
     }
